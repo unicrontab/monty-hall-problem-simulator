@@ -1,0 +1,61 @@
+.outerDoor {
+    width: 5rem;
+    height: 10rem;
+    border-style: solid;
+    border-color: #00838F;
+    border-width: 5px;
+    margin: 30px;
+    border-radius: 5px;
+    z-index: -40;
+    background-color: rgba(0,0,0,0.84);
+}
+
+.innerDoorClosed {
+    width: 5rem;
+    height: 10rem;
+    background-color:rgba(0, 96, 100, 1);
+    display: grid;
+    justify-items: center;
+    border-radius: 5px;
+}
+
+.innerDoorOpen {
+    width: 5rem;
+    height: 10rem;
+    display: grid;
+    justify-items: center;
+}
+
+.prize {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100px;
+    background-color: yellow;
+    border-style: double;
+    border-width: 10px;
+    border-color: orange;
+    align-self: center;
+    z-index: 30;
+}
+
+.picked {
+    position: absolute;
+    transform: translateX(1.8rem) translateY(-2rem);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid red;
+    z-index: 20;
+}
+
+.oldPick {
+    position: absolute;
+    transform: translateX(1.8rem) translateY(-2rem);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid rgba(100,50,50,0.54);
+    z-index: 20;
+}
