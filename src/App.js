@@ -1,32 +1,32 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
+import * as R from 'ramda';
+import styled from 'styled-components';
 
+import Header from './Header';
+import Doors from './Doors';
 import {
     resetDoors,
-    closeDoors,
     openDoors,
-    keepAndOpenSecondDoor,
-    openPickedDoor,
-    openDoor,
     setPrize,
     didWin,
-    random,
     switchDoors,
     pickFirstDoor,
     openExtraDoor,
+    openPickedDoor,
 } from './lib/doorHelper';
-import Doors from './Doors';
-import Controls from './Controls';
-import * as R from 'ramda';
-import { primary, secondary, white } from './theme';
 
-import './App.css';
-const log = x => {
-    console.log(x);
-    return x;
-};
+const runSimulation = R.pipe(
+    resetDoors,
+    setPrize,
+    pickFirstDoor,
+    openExtraDoor,
+    switchDoors,
+    openPickedDoor,
+);
+
+const AppWrapper = styled.div`
+    display: grid;
+`;
 
 class App extends Component {
     constructor(props) {
@@ -60,28 +60,20 @@ class App extends Component {
                 },
             ],
         };
-        this.run = (doors) => {
-            console.log('Run:', this.state.simRun);
-            const doorState = R.pipe(
-                resetDoors,
-                setPrize,
-                pickFirstDoor,
-                openExtraDoor,
-                switchDoors,
-            )(doors);
+        this.run = (oldDoors) => {
+            const doors = runSimulation(oldDoors);
 
-            const wonSwitching = didWin(doorState);
-            if (wonSwitching) {
+            if (didWin(doors)) {
                 this.setState({
                     simRun: this.state.simRun + 1,
                     switchWin: this.state.switchWin + 1,
-                    doors: doorState,
+                    doors,
                 });
             } else {
                 this.setState({
                     simRun: this.state.simRun + 1,
                     switchLost: this.state.switchLost + 1,
-                    doors: doorState,
+                    doors,
                 });
             }
         };
@@ -100,41 +92,16 @@ class App extends Component {
     }
 
     render() {
-        const doors = this.state.doors;
-        const won = didWin(doors);
-        const wonOutput = won ? ': )' : ': (';
-        const wonOutputColor = won ? 'green' : 'red';
-        const switchPercent = Math.round((this.state.switchWin / this.state.simRun) * 100);
-        const stayPercent = Math.round((this.state.switchLost / this.state.simRun) * 100);
-
         return (
-            <MuiThemeProvider>
-                <div className="App">
-                    <header className="App-header">
-                        <h1 
-                            style={{ color: white }}
-                            className="App-title">Monty Hall Problem Simulator</h1>
-                        <p> <a 
-                            style={{ color: white, fontStyle: 'none' }}
-                            href="https://en.wikipedia.org/wiki/Monty_Hall_problem">wiki</a> </p>
-                    </header>
-                    <Doors doors={doors}/>
-                    <h3 
-                        className='won-output'
-                        style={{
-                            color: wonOutputColor,
-                        }}> {wonOutput} </h3>
-                    <Controls
-                        doors={doors}
-                        run={this.run}
-                        runCount={this.state.simRun}
-                    />
-
-                    <p><span className='picked-legend' /><i>Switch:  {this.state.switchWin} - {switchPercent}%</i></p>
-                    <p><span className='oldPick-legend' /><i>Stay: {this.state.switchLost} - {stayPercent}%</i></p>
-                    <p></p>
-                </div>
-            </MuiThemeProvider>
+            <AppWrapper>
+                <Header
+                    doors={this.state.doors}
+                    runCount={this.state.simRun}
+                    run={this.run}
+                    switchWin={this.state.switchWin}
+                    switchLost={this.state.switchLost} />
+                <Doors doors={this.state.doors} />
+            </AppWrapper>
         );
     }
 }

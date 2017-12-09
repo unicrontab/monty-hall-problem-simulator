@@ -1,33 +1,5 @@
-.outerDoor {
-    width: 5rem;
-    height: 10rem;
-    border-style: solid;
-    border-color: #00838F;
-    border-width: 5px;
-    margin: 30px;
-    border-radius: 5px;
-    z-index: -40;
-    background-color: rgba(0,0,0,0.84);
-}
-
-.innerDoorClosed {
-    width: 5rem;
-    height: 10rem;
-    background-color:rgba(0, 96, 100, 1);
-    display: grid;
-    justify-items: center;
-    border-radius: 5px;
-}
-
-.innerDoorOpen {
-    width: 5rem;
-    height: 10rem;
-    display: grid;
-    justify-items: center;
-}
-
 .prize {
-    width: 2rem;
+    /* width: 2rem; */
     height: 2rem;
     border-radius: 100px;
     background-color: yellow;
