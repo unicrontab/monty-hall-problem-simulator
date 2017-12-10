@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import { primary, white } from './theme';
 import styled from 'styled-components';
-import runButton from './run.png';
-import runButtonHover from './runHover.png';
+// import * as R from 'ramda';
 
+import Notification from './Notification';
+import runButton from './img/run.png';
+import runButtonHover from './img/runHover.png';
 
 const ControlContainer = styled.div`
     display: grid;
-    grid-template-columns: auto 50px auto;
-    justify-content: stretch;
+    grid-template-columns: auto 1px auto;
+    justify-content: center;
     padding-top: calc(10vh);
 `;
 
 const RunButton = styled.img`
     grid-column: 2;
-    width: calc(10vw);
-    max-width: 50px;
+    width: calc(20vw);
+    max-width: 60px;
     justify-self: center;
+    z-index: 50;
+    transform: translateY(calc(-1vh));
 
     &:active {
         transform: scale(1.2);
-        transform-origin: center center;
     }
 `;
 
@@ -29,6 +30,8 @@ const ProgressContainer = styled.div`
     height: 20px;
     width: calc(30vw);
     border: solid 4px black;
+    border-radius: 20px;
+    overflow: hidden;
     border-bottom: solid 30px rgba(0,0,0,0.54);
     display: grid;
     background-color: rgba(0,0,0,0.54);
@@ -65,7 +68,7 @@ const ProgressBar = props => (
         <Label>{props.label}</Label>
         <Progress style={{ width: `${props.width}%` }} />
     </ProgressContainer>
-)
+);
 
 
 class Controls extends Component {
@@ -73,11 +76,25 @@ class Controls extends Component {
         super(props);
         this.state = {
             buttonSrc: runButton,
+            notifications: [],
         };
     }
-
     run = () => {
         this.props.run(this.props.doors);
+        // const oldNotifications = R.takeLast(1, this.state.notifications);
+        // TODO: Garbage Collect this.state.notifications :(
+        // TODO: Need to move out of here. Only renders 2nd+ notification.
+        const newNotification = (
+            <Notification
+                key={this.state.notifications.length + 1}
+                won={this.props.won}
+                switchWin={this.props.switchWin}
+                switchLost={this.props.switchLost}
+            />
+        );
+        this.setState(prevState => ({
+            notifications: [...prevState.notifications, newNotification], 
+        }));
     }
 
     handleMouseOver = () => {
@@ -89,12 +106,12 @@ class Controls extends Component {
     }
 
     render() {
+        console.log(this.state.notifications.length);
         const switchPercent = Math.round((this.props.switchWin / this.props.runCount) * 100);
         const stayPercent = Math.round((this.props.switchLost / this.props.runCount) * 100);
-
-        console.log(JSON.stringify(this.props, null, 4));
         return (
             <ControlContainer>
+                {this.state.notifications}
                 <ProgressBar label="staying" align="right" width={stayPercent} />
                 <RunButton
                     src={this.state.buttonSrc}
@@ -106,8 +123,8 @@ class Controls extends Component {
                 />
                 <ProgressBar label="switching" align="left" width={switchPercent} />
             </ControlContainer>
-        )
-    };
-};
+        );
+    }
+}
 
 export default Controls;

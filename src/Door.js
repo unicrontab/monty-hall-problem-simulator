@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import doorSpriteSheet from './doors.png';
-import doorPrizeSpriteSheet from './doorPrize.png';
+import doorSpriteSheet from './img/doors.png';
+import doorPrizeSpriteSheet from './img/doorPrize.png';
 import Spritesheet from './lib/Spritesheet';
-import pointer from './pointer.png';
-
-
-import './Door.css';
+import pointer from './img/pointer.png';
 
 import styled, { keyframes } from 'styled-components';
 
@@ -25,16 +22,22 @@ const DoorContainer = styled.div`
 `;
 
 const Pointer = styled.img`
+    color: rgba(255,255,255,54);
     width: 40px;
     align-self: center;
-    z-index: 30;
-    animation: ${bobble} 2s ease-in-out infinite;
-
 `;
 
 const OldPointer = Pointer.extend`
     z-index: 30;
     opacity: 0.5;
+`;
+
+const PointerLabel = styled.div`
+    display: grid;
+    color: rgba(255,255,255,0.87);
+    justify-items: center;
+    z-index: 30;
+    animation: ${bobble} 2s ease-in-out infinite;
 `;
 
 class Door extends Component {
@@ -58,15 +61,23 @@ class Door extends Component {
     };
 
     renderPointer = (picked, oldPick) => {
-        if (picked) return <Pointer src={pointer} />;
-        if (oldPick) return <OldPointer src={pointer} />;
+        if (picked) return (
+            <PointerLabel>
+                <div>switching</div>
+                <Pointer src={pointer} />
+            </PointerLabel>
+        );
+        if (oldPick) return (
+            <PointerLabel>
+                <div>staying</div>
+                <OldPointer src={pointer} />
+            </PointerLabel>
+        );
     };
 
     render() {
         this.resetDoors();
         if (this.props.isOpen) this.spritesheetInstance.goToAndPlay(0);
-        const picked = this.props.picked;
-        const oldPick = this.props.oldPick;
         const prize = this.props.hasPrize;
         const spriteSheet = prize ? doorPrizeSpriteSheet : doorSpriteSheet;
 
