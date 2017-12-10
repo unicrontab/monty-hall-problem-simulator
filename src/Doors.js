@@ -1,32 +1,22 @@
 import React from 'react';
 import Door from './Door';
 import styled from 'styled-components';
-import Controls from './Controls';
-import background from './stone-bg.png';
-
-import './Doors.css';
-
 
 const DoorContainer = styled.div`
     display: grid;
-    height: calc(90vh);
-    min-height: 500px;
-    padding-top: calc(20vh);
+    padding-top: calc(30vh);
     grid-template-columns: repeat(3, auto);
     justify-items: center;
     align-content: end;
-    background: 
-        radial-gradient(transparent, black),
-        url(${background});
 
     &:after {
         grid-column: 1 / span 3;
         content: '';
         width: calc(100vw);
-        height: calc(20vh);
+        height: calc(100vh);
         background:
             radial-gradient(transparent, black),
-            linear-gradient(rgba(100,100,100,0.66), black);
+            linear-gradient(rgba(0,0,0,0.3), black);
     }
 
 `;
@@ -42,7 +32,6 @@ const Doors = (props) => {
     ));
     return (
         <DoorContainer>
-
             {renderDoors}
         </DoorContainer>
         

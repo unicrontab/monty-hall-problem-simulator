@@ -3,6 +3,16 @@ import * as R from 'ramda';
 export const random = () => Math.floor(Math.random() * 3);
 export const binary = () => Math.floor(Math.random() * 2);
 
+const createDoor = (id) => ({
+    id,
+    isOpen: false,
+    hasPrize: false,
+    picked: false,
+});
+
+export const createDoors = R.times(createDoor, 3);
+
+
 export const closeDoors = doors => doors.map(door => {
     const newDoor = R.assoc('isOpen', false, door);
     return newDoor;
@@ -88,3 +98,12 @@ export const didWin = doors => {
 };
 
 export const checkForPrize = (pick, doors) => doors[pick].hasPrize;
+
+export const runSimulation = R.pipe(
+    resetDoors,
+    setPrize,
+    pickFirstDoor,
+    openExtraDoor,
+    switchDoors,
+    openPickedDoor,
+);
